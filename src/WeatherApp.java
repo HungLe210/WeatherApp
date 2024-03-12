@@ -22,13 +22,13 @@ public class WeatherApp {
                 JSONArray locationData = getLocationData(locationName);
 
                 //extract latitude and longitude data
-                JSONObject location=(JSONObject) locationData.get(0);
-                double latitude =(double) location.get("latitude");
+                JSONObject location = (JSONObject) locationData.get(0);
+                double latitude = (double) location.get("latitude");
                 double longitude = (double) location.get("longitude");
 
                 //build API request URL with location coordinates
                 String urlString = "https://api.open-meteo.com/v1/forecast?"+
-                    "latitude=" + latitude +"&longitude"+ longitude +"&hourly=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto";
+                    "latitude=" + latitude +"&longitude="+ longitude +"&hourly=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto";
 
                 try{
                     //call api and get response
@@ -70,24 +70,28 @@ public class WeatherApp {
                     JSONArray temperatureData = (JSONArray) hourly.get("temperature_2m");
                     double temperature = (double) temperatureData.get(index);
 
+//                    System.out.println(temperature);
+//                    System.out.println(index);
+
                     //get weather code
-                    JSONArray weathercode = (JSONArray) hourly.get("weathercode");
+                    JSONArray weathercode = (JSONArray) hourly.get("weather_code");
                     String weatherCondition = convertWeatherCode((long) weathercode.get(index));
 
                     // get humidity
-                    JSONArray relativeHumidity = (JSONArray) hourly.get("relativehumidity_2m");
+                    JSONArray relativeHumidity = (JSONArray) hourly.get("relative_humidity_2m");
                     long humidity = (long) relativeHumidity.get(index);
 
                     // get windspeed
-                    JSONArray windspeedData = (JSONArray) hourly.get("windspeed_10m");
+                    JSONArray windspeedData = (JSONArray) hourly.get("wind_speed_10m");
                     double windspeed = (double) windspeedData.get(index);
 
                     //build the weather json data object that we are going to access in our frontend
                     JSONObject weatherData = new JSONObject();
-                    weatherData.put("tempearture", temperature);
+                    weatherData.put("temperature", temperature);
                     weatherData.put("weather_condition", weatherCondition);
                     weatherData.put("humidity", humidity);
                     weatherData.put("windspeed", windspeed);
+
 
                     return weatherData;
 
@@ -97,7 +101,7 @@ public class WeatherApp {
                     e.printStackTrace();
                 }
 
-
+                System.out.println("Error: Null Data");
                 return null;
             }
 
@@ -149,6 +153,7 @@ public class WeatherApp {
                 e.printStackTrace();
             }
 
+
             //could not find location
             return null;
 
@@ -185,7 +190,6 @@ public class WeatherApp {
                     return i;
                 }
             }
-
                 return 0;
             }
 
@@ -194,7 +198,7 @@ public class WeatherApp {
             LocalDateTime currentDateTime = LocalDateTime.now();
 
             //format date to be 2023-09-02T00:00
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH':00'");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH':00'");
 
             // format and print the current date and time
             String formattedDateTime = currentDateTime.format(formatter);
