@@ -146,7 +146,7 @@ public class WeatherAppGUI extends JFrame {
 
                 // update windspeed text
                 double windspeed = (double) weatherData.get("windspeed");
-                humidityText.setText("<html><b>Windspeed</b> " + windspeed + "km/h</html>");
+                windspeedText.setText("<html><b>Windspeed</b> " + windspeed + "km/h</html>");
 
             }
         });
